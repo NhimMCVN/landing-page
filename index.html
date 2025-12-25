@@ -1,346 +1,547 @@
 <!DOCTYPE html>
-
-<html class="" lang="en">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Deep Sea - Beyond Data. Pure Alpha.</title>
+    <title>DeepSea - On-Chain Intelligence</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Round"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;family=Manrope:wght@500;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
     <script>
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             colors: {
-              primary: "#ec1313",
-              "primary-hover": "#A61F1F",
-              "background-light": "#f8f6f6",
-              "background-dark": "#221010",
+              primary: "#C81E1E", // Deep Red from screenshot
+              secondary: "#9B1C1C", // Darker Red for gradients/hover
+              "background-light": "#F9FAFB",
+              "background-dark": "#0F172A",
               "surface-light": "#FFFFFF",
-              "surface-dark": "#181B21",
-              "text-light": "#1A1A1A",
-              "text-dark": "#E5E7EB",
-              "text-muted-light": "#6B7280",
-              "text-muted-dark": "#9CA3AF",
-              "border-light": "#E5E7EB",
-              "border-dark": "#374151",
+              "surface-dark": "#1E293B",
             },
-            fontFamily: { sans: ["Inter", "sans-serif"], display: "Manrope" },
+            fontFamily: {
+              display: ["'Plus Jakarta Sans'", "sans-serif"],
+              body: ["'Plus Jakarta Sans'", "sans-serif"],
+            },
             borderRadius: {
-              DEFAULT: "0.125rem",
-              lg: "0.25rem",
-              xl: "0.5rem",
-              full: "0.75rem",
+              DEFAULT: "0.75rem", // 12px
+              "2xl": "1rem",
+              "3xl": "1.5rem",
             },
             boxShadow: {
-              soft: "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
-              glow: "0 0 15px rgba(201, 42, 42, 0.3)",
+              soft: "0 10px 40px -10px rgba(0,0,0,0.08)",
+              glow: "0 0 20px rgba(200, 30, 30, 0.3)",
+              neon: "0 0 15px rgba(200, 30, 30, 0.5), 0 0 30px rgba(200, 30, 30, 0.3)",
+            },
+            backgroundImage: {
+              "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
             },
           },
         },
       };
     </script>
     <style>
-      html {
-        scroll-behavior: smooth;
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
       }
-      ::-webkit-scrollbar {
-        width: 8px;
+      .blur-blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.6;
       }
-      ::-webkit-scrollbar-track {
-        background: transparent;
+      .pattern-grid-fade {
+        mask-image: linear-gradient(to bottom, transparent, black, transparent);
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          transparent,
+          black,
+          transparent
+        );
       }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-      }
-      .dark ::-webkit-scrollbar-thumb {
-        background: #4b5563;
-      }
-      .text-gradient {
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-image: linear-gradient(to right, #c92a2a, #ef4444);
+      .node-network {
+        background-image: radial-gradient(
+            circle at 15% 50%,
+            rgba(200, 30, 30, 0.1) 0%,
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 85% 30%,
+            rgba(200, 30, 30, 0.1) 0%,
+            transparent 25%
+          );
       }
     </style>
   </head>
   <body
-    class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300"
+    class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-gray-100 antialiased overflow-x-hidden transition-colors duration-300"
   >
     <nav
-      class="fixed w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-border-light dark:border-border-dark"
+      class="fixed w-full z-50 top-0 left-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
-          <div class="flex-shrink-0 flex items-center gap-2">
-            <img
-              alt="Deep Sea Logo"
-              class="h-10 w-auto"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjFfffX_gNRaGRNwZTrRKhxOYHmxlEYSGHk3mkaTcDqJqsBnofo_3jLDa8ZY9ZLSMO_LPayEXTJoTly-0j653KEh716PpmHHgUfTmQb0gRs_PgPyiLvwe1h7QuEk5NuKUfU1DUkJ5FfcChkWlPJP4B_JgUhGexMS7TIbiy7m2pIyJwxZsHTo2Hon5dDLT9cckkRhQ_DvM7Pu5chUDk7N5s9B2tODYz7Q3WLr8cJNeLmMo1xiDnwPMJLrrGXXqQ3MrsMEjdFrVoz98"
-            />
+          <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+            <span class="material-icons-round text-primary text-3xl"
+              >tsunami</span
+            >
+            <span
+              class="font-bold text-xl tracking-tight text-gray-900 dark:text-white"
+              >Deep Sea</span
+            >
           </div>
           <div class="hidden md:flex items-center space-x-8">
             <a
-              class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors"
-              href="#features"
-              >Services</a
+              class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+              >Features</a
             >
             <a
-              class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors"
-              href="#about"
-              >About us</a
+              class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+              >Roadmap</a
             >
             <a
-              class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-primary transition-colors"
-              href="#milestones"
-              >Milestones</a
+              class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+              >About Us</a
             >
             <a
-              class="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-full text-sm font-medium transition-all shadow-lg shadow-primary/30"
-              href="#contact"
-              >Contact</a
+              class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+              href="#"
+              >Login</a
             >
+          </div>
+          <div class="hidden md:flex items-center space-x-4">
+            <button
+              class="bg-primary hover:bg-red-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-glow transition-all transform hover:scale-105"
+            >
+              Launch App
+            </button>
           </div>
           <div class="md:hidden flex items-center">
             <button
-              class="text-text-light dark:text-text-dark hover:text-primary focus:outline-none"
+              class="text-gray-600 dark:text-gray-300 hover:text-gray-900 focus:outline-none"
             >
-              <span class="material-icons">menu</span>
+              <span class="material-icons-round">menu</span>
             </button>
           </div>
         </div>
       </div>
     </nav>
-    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
       <div
-        class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl dark:bg-primary/10"
+        class="blur-blob bg-blue-200 dark:bg-blue-900/30 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"
       ></div>
       <div
-        class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-orange-500/5 rounded-full blur-3xl dark:bg-orange-500/10"
+        class="blur-blob bg-red-100 dark:bg-red-900/20 w-[500px] h-[500px] rounded-full bottom-0 right-0 translate-x-1/3 translate-y-1/3"
       ></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="text-center lg:text-left">
             <div
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 dark:bg-red-900/20 text-primary text-xs font-semibold tracking-wider uppercase mb-6 border border-red-100 dark:border-red-900/30"
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 dark:bg-red-900/30 text-primary text-xs font-semibold mb-6 border border-red-100 dark:border-red-800"
             >
               <span
                 class="w-2 h-2 rounded-full bg-primary animate-pulse"
               ></span>
-              Live Whale Tracking
+              Live on Mainnet
             </div>
             <h1
-              class="text-5xl lg:text-7xl font-display font-bold leading-tight mb-6"
+              class="text-5xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-[1.1] mb-6"
             >
-              <span class="text-primary">Beyond Data.</span><br />
-              Pure Alpha.<br />
+              Beyond Data. <br />
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500"
+                >Pure Alpha.</span
+              ><br />
               Track the Best.
             </h1>
             <p
-              class="text-lg text-text-muted-light dark:text-text-muted-dark mb-8 max-w-lg leading-relaxed"
+              class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed"
             >
-              Uncover hidden market movements with blockchain intelligence
-              designed for the elite. DeepSea transforms on-chain chaos into
-              actionable signal.
+              DeepSea helps you follow every wallet, clarify the most elite
+              smart money movements, and discover alpha before the crowd reacts.
             </p>
-            <div class="flex flex-wrap gap-4 mb-12">
+            <div
+              class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            >
               <button
-                class="bg-primary hover:bg-primary-hover text-white px-8 py-3.5 rounded-xl font-medium transition-all shadow-lg shadow-primary/30 flex items-center gap-2"
+                class="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-2xl text-base font-bold shadow-lg shadow-red-500/30 transition-all hover:-translate-y-1"
               >
-                App In Touch
-                <span class="material-icons text-sm">arrow_forward</span>
+                Start Tracking
               </button>
               <button
-                class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark text-text-light dark:text-text-dark hover:border-primary dark:hover:border-primary px-8 py-3.5 rounded-xl font-medium transition-all flex items-center gap-2"
+                class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white px-8 py-4 rounded-2xl text-base font-bold hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
               >
-                Deep Airdrop
+                View Roadmap
               </button>
             </div>
-            <div
-              class="grid grid-cols-3 gap-8 border-t border-border-light dark:border-border-dark pt-8"
-            >
-              <div>
-                <div
-                  class="text-2xl font-bold font-display text-text-light dark:text-text-dark"
-                >
-                  20k+
+          </div>
+          <div class="relative flex justify-center lg:justify-end">
+            <div class="relative w-full max-w-lg aspect-square">
+              <img
+                alt="Abstract 3D Red Form"
+                class="object-cover w-full h-full rounded-[3rem] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2OJwMAlkAZWnetWFtaaOpCo3XvMUAfX6y1u-X_Py4QONM5eXWi-qnt5915-qoffQoPCjQRp2t0abRPPzUqvIlhsW8bIbQwBJGKcwjuH97aCE4wM03mRnlZ9_UeVdn5CQU9cj3Gxyn2hkSeQ2J4dSR_hqGWqvBnQLJEEdZeMctyYucpjjHwUqSWc02FMBBvMmErkLGj2bqTpP9yoqaq36aZnzbUnd2W7cKLpOF7iQHOlgcHrd4KJC07BZVX90AjUgoz0Hx4RNmsD6i"
+              />
+              <div
+                class="absolute -bottom-6 -left-6 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 flex items-center gap-3 animate-bounce"
+                style="animation-duration: 3s"
+              >
+                <div class="bg-green-100 text-green-600 p-2 rounded-lg">
+                  <span class="material-icons-round text-xl">trending_up</span>
                 </div>
-                <div
-                  class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
-                >
-                  Elite Wallets
-                </div>
-              </div>
-              <div>
-                <div
-                  class="text-2xl font-bold font-display text-text-light dark:text-text-dark"
-                >
-                  $48+
-                </div>
-                <div
-                  class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
-                >
-                  Volume Tracked
-                </div>
-              </div>
-              <div>
-                <div
-                  class="text-2xl font-bold font-display text-text-light dark:text-text-dark"
-                >
-                  24/7
-                </div>
-                <div
-                  class="text-xs text-text-muted-light dark:text-text-muted-dark mt-1"
-                >
-                  Real-time Data
+                <div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    Wallet Growth
+                  </p>
+                  <p class="font-bold text-gray-900 dark:text-white">+245%</p>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="relative">
-            <div
-              class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-3xl blur-2xl transform rotate-3"
-            ></div>
-            <img
-              alt="Abstract Blockchain Data Visualization"
-              class="relative rounded-3xl shadow-2xl border border-white/20 dark:border-white/10 w-full object-cover h-[500px]"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO2nEmETLXv4RojYonV7eNi9j-4UHYMC2f5yD-BscJflKFS9aqqMHfN6Ai5nb-p13E39Hx98JlQWsVVrbM9GSu2C1HHQQu9lPMDRaXy__BE4_G8MB9ZljCYJM_RVyJgOftSl4SbX8luDJoWEV-DlWYA_r4ZS3XmUXJDcLDh43k8gvHvDo0mRwh-IcMurMT0PRVaaqpdrFD0mVvNe2wla_D52CAtI-ubLbPbZ8AnUXvFp-ZBXS0Hwyd9ZziL3O4gtYg-SL6siuiAhw"
-            />
-            <div
-              class="absolute -bottom-6 -left-6 bg-white dark:bg-surface-dark p-4 rounded-2xl shadow-xl border border-border-light dark:border-border-dark flex items-center gap-3 animate-bounce"
-              style="animation-duration: 3s"
-            >
-              <div class="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
-                <span class="material-icons text-green-600 dark:text-green-400"
-                  >check_circle</span
-                >
-              </div>
-              <div>
-                <div
-                  class="text-xs text-text-muted-light dark:text-text-muted-dark"
-                >
-                  Status
-                </div>
-                <div
-                  class="text-sm font-bold text-text-light dark:text-text-dark"
-                >
-                  System Connected
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="py-20 bg-white dark:bg-surface-dark" id="features">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl lg:text-4xl font-display font-bold mb-4">
-            Instant understanding of what makes it
-            <span class="text-primary">different.</span>
-          </h2>
-          <p class="text-text-muted-light dark:text-text-muted-dark">
-            DeepSea doesn't follow every wallet — only the most elite. By
-            tracking the top-performing investors, we don't just provide data,
-            we deliver elite signals that matter.
-          </p>
-        </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div
-            class="bg-primary p-8 rounded-2xl text-white transform hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden group"
-          >
-            <div
-              class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl transition-all group-hover:scale-150"
-            ></div>
-            <div
-              class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-6 backdrop-blur-sm"
-            >
-              <span class="material-icons text-white">radar</span>
-            </div>
-            <h3 class="text-xl font-bold mb-3">Tracking</h3>
-            <p class="text-white/80 text-sm leading-relaxed">
-              Track accumulation, exits, and capital flow from 20,000
-              top-performing whale wallets - see smart money move before price
-              reacts.
-            </p>
-          </div>
-          <div
-            class="bg-background-light dark:bg-background-dark p-8 rounded-2xl border border-border-light dark:border-border-dark hover:border-primary/30 dark:hover:border-primary/30 transition-colors group"
-          >
-            <div
-              class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors text-primary"
-            >
-              <span class="material-icons">query_stats</span>
-            </div>
-            <h3
-              class="text-xl font-bold mb-3 text-text-light dark:text-text-dark"
-            >
-              Asset Intelligence
-            </h3>
-            <p
-              class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed"
-            >
-              Analyze any token through elite whale behavior: are elite wallets
-              buying, holding, or distributing? Understand conviction.
-            </p>
-          </div>
-          <div
-            class="bg-background-light dark:bg-background-dark p-8 rounded-2xl border border-border-light dark:border-border-dark hover:border-primary/30 dark:hover:border-primary/30 transition-colors group"
-          >
-            <div
-              class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors text-primary"
-            >
-              <span class="material-icons">psychology</span>
-            </div>
-            <h3
-              class="text-xl font-bold mb-3 text-text-light dark:text-text-dark"
-            >
-              AI On-Chain Assistant
-            </h3>
-            <p
-              class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed"
-            >
-              Ask questions in plain language and get instant, data-backed
-              insights from blockchain activity — no complex dashboards needed.
-            </p>
-          </div>
-          <div
-            class="bg-background-light dark:bg-background-dark p-8 rounded-2xl border border-border-light dark:border-border-dark hover:border-primary/30 dark:hover:border-primary/30 transition-colors group"
-          >
-            <div
-              class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors text-primary"
-            >
-              <span class="material-icons">verified</span>
-            </div>
-            <h3
-              class="text-xl font-bold mb-3 text-text-light dark:text-text-dark"
-            >
-              KOL Verification
-            </h3>
-            <p
-              class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed"
-            >
-              Verify whether influencers actually trade what they promote by
-              matching claims with real wallet activity — separate signal from
-              noise.
-            </p>
           </div>
         </div>
       </div>
     </section>
     <section
-      class="py-24 bg-gradient-to-br from-primary to-[#B91C1C] relative overflow-hidden"
-      id="about"
+      class="py-24 relative overflow-hidden bg-white dark:bg-slate-900 border-y border-gray-100 dark:border-slate-800"
     >
+      <div
+        class="absolute inset-0 pattern-grid-fade pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
+        style="
+          background-image: linear-gradient(
+              to right,
+              #c81e1e 1px,
+              transparent 1px
+            ),
+            linear-gradient(to bottom, #c81e1e 1px, transparent 1px);
+          background-size: 40px 40px;
+        "
+      ></div>
+      <div
+        class="absolute -right-20 top-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"
+      ></div>
+      <div
+        class="absolute -left-20 bottom-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-[100px] pointer-events-none"
+      ></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="mb-16">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="material-icons-round text-primary text-2xl"
+              >card_giftcard</span
+            >
+            <span
+              class="text-xs font-bold tracking-widest uppercase text-primary"
+              >Exclusive Access</span
+            >
+          </div>
+          <h2
+            class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight"
+          >
+            Earn Your Edge. <br class="hidden sm:block" />
+            <span class="text-primary">Join DEEP Airdrop.</span>
+          </h2>
+          <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl">
+            We are rewarding our earliest supporters with proprietary tokens. Be
+            part of the intelligence network from day one.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div class="lg:col-span-7 space-y-8">
+            <div class="relative">
+              <div
+                class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-100 dark:bg-slate-800"
+              ></div>
+              <div class="relative flex items-start gap-6 group">
+                <div
+                  class="flex-shrink-0 w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 group-hover:border-primary transition-colors flex items-center justify-center font-bold text-lg text-gray-900 dark:text-white shadow-sm z-10"
+                >
+                  1
+                </div>
+                <div
+                  class="bg-gray-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-gray-100 dark:border-slate-700/50 w-full transition-all hover:shadow-lg hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-0.5"
+                >
+                  <h3
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                  >
+                    Connect Your Wallet
+                  </h3>
+                  <p
+                    class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"
+                  >
+                    Link your primary wallet to create your DeepSea account.
+                    Older wallets with higher transaction volumes receive a
+                    multiplier bonus.
+                  </p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-6 group">
+                <div
+                  class="flex-shrink-0 w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 group-hover:border-primary transition-colors flex items-center justify-center font-bold text-lg text-gray-900 dark:text-white shadow-sm z-10"
+                >
+                  2
+                </div>
+                <div
+                  class="bg-gray-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-gray-100 dark:border-slate-700/50 w-full transition-all hover:shadow-lg hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-0.5"
+                >
+                  <h3
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                  >
+                    Analyze On-Chain Data
+                  </h3>
+                  <p
+                    class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"
+                  >
+                    Utilize DeepSea's tools to uncover high-performance
+                    insights. Real usage equals higher rewards.
+                  </p>
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    <span
+                      class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-300 border border-red-100 dark:border-red-900/50"
+                    >
+                      Earn DEEP Points
+                    </span>
+                    <span
+                      class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-slate-300"
+                    >
+                      Daily Tasks
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-6 group">
+                <div
+                  class="flex-shrink-0 w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 group-hover:border-primary transition-colors flex items-center justify-center font-bold text-lg text-gray-900 dark:text-white shadow-sm z-10"
+                >
+                  3
+                </div>
+                <div
+                  class="bg-gray-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-gray-100 dark:border-slate-700/50 w-full transition-all hover:shadow-lg hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-0.5"
+                >
+                  <h3
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                  >
+                    Engage &amp; Contribute
+                  </h3>
+                  <p
+                    class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"
+                  >
+                    Share valuable findings and invite friends. Participate in
+                    platform governance to boost your score.
+                  </p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-6 group">
+                <div
+                  class="flex-shrink-0 w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 group-hover:border-primary transition-colors flex items-center justify-center font-bold text-lg text-gray-900 dark:text-white shadow-sm z-10"
+                >
+                  4
+                </div>
+                <div
+                  class="bg-gray-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-gray-100 dark:border-slate-700/50 w-full transition-all hover:shadow-lg hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-0.5"
+                >
+                  <h3
+                    class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                  >
+                    Secure Your Allocation
+                  </h3>
+                  <p
+                    class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed"
+                  >
+                    Claim your earned $DEEP based on early platform activity and
+                    impact.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-5 relative h-full">
+            <div
+              class="bg-gradient-to-b from-primary to-red-900 dark:from-red-900 dark:to-slate-900 rounded-3xl p-8 text-white h-full shadow-2xl relative overflow-hidden border border-red-800/50 flex flex-col justify-between"
+            >
+              <div class="absolute top-0 right-0 p-12 opacity-10">
+                <span class="material-icons-round text-9xl">token</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"
+              ></div>
+              <div class="relative z-10">
+                <h3
+                  class="text-sm font-semibold text-red-200 mb-2 uppercase tracking-wide"
+                >
+                  Insider Opportunity
+                </h3>
+                <h2 class="text-3xl font-extrabold mb-8 leading-tight">
+                  Unlock Your <br />Insider Reward
+                </h2>
+                <div class="space-y-6">
+                  <div class="flex gap-4 items-start">
+                    <div
+                      class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-1"
+                    >
+                      <span class="material-icons-round text-white text-sm"
+                        >lock_open</span
+                      >
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-lg">Priority Access</h4>
+                      <p class="text-red-100 text-sm mt-1 opacity-80">
+                        Exclusive early access to new AI features.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-4 items-start">
+                    <div
+                      class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-1"
+                    >
+                      <span class="material-icons-round text-white text-sm"
+                        >auto_graph</span
+                      >
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-lg">Fee Discounts</h4>
+                      <p class="text-red-100 text-sm mt-1 opacity-80">
+                        Permanent platform fee reductions for holders.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-4 items-start">
+                    <div
+                      class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 mt-1"
+                    >
+                      <span class="material-icons-round text-white text-sm"
+                        >how_to_vote</span
+                      >
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-lg">Governance Power</h4>
+                      <p class="text-red-100 text-sm mt-1 opacity-80">
+                        Shape the future roadmap of the protocol.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-12 relative z-10">
+                <button
+                  class="w-full bg-white text-primary font-bold py-4 rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group"
+                >
+                  Join Airdrop Now
+                </button>
+                <div class="mt-4 text-center">
+                  <span
+                    class="inline-flex items-center px-3 py-1 rounded-full bg-black/20 text-xs font-medium text-red-100 border border-white/10 backdrop-blur-sm"
+                  >
+                    Check Your Eligibility
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-20 bg-white dark:bg-slate-900 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2
+            class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+          >
+            Instant understanding of <br />what makes it different.
+          </h2>
+          <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            By tracking top-performing traders, we don't just provide data; we
+            deliver alpha signals that matter.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            class="bg-primary text-white p-8 rounded-3xl shadow-xl transform scale-105 border-none relative overflow-hidden group"
+          >
+            <div
+              class="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-150 transition-transform duration-500"
+            >
+              <span class="material-icons-round text-9xl">radar</span>
+            </div>
+            <div class="relative z-10">
+              <div
+                class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-6"
+              >
+                <span class="material-icons-round text-2xl">radar</span>
+              </div>
+              <h3 class="text-xl font-bold mb-3">Tracking</h3>
+              <p class="text-sm text-red-100 leading-relaxed opacity-90">
+                Real-time alerts when a selected wallet buys or sells. Be the
+                first to know when smart money moves into a new narrative.
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-gray-50 dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+          >
+            <div
+              class="w-12 h-12 bg-white dark:bg-slate-700 rounded-xl flex items-center justify-center mb-6 shadow-sm text-primary"
+            >
+              <span class="material-icons-round text-2xl">query_stats</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              Asset Intelligence
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Analyze any token's risk profile, smart money holding volume, and
+              trading behavior immediately.
+            </p>
+          </div>
+          <div
+            class="bg-gray-50 dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+          >
+            <div
+              class="w-12 h-12 bg-white dark:bg-slate-700 rounded-xl flex items-center justify-center mb-6 shadow-sm text-primary"
+            >
+              <span class="material-icons-round text-2xl">smart_toy</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              AI On-Chain Assistant
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Ask our AI questions like "What are the whales buying today?" and
+              get instant, data-backed insights.
+            </p>
+          </div>
+          <div
+            class="bg-gray-50 dark:bg-slate-800 p-8 rounded-3xl border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+          >
+            <div
+              class="w-12 h-12 bg-white dark:bg-slate-700 rounded-xl flex items-center justify-center mb-6 shadow-sm text-primary"
+            >
+              <span class="material-icons-round text-2xl">verified_user</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">
+              KOL Verification
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Verify whether a finance influencer actually buys what they shill.
+              Track their wallet performance against their tweets.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="bg-primary py-24 relative overflow-hidden">
       <div
         class="absolute inset-0 opacity-10"
         style="
@@ -349,397 +550,727 @@
         "
       ></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="grid lg:grid-cols-2 gap-16 mb-20 items-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-center">
           <div>
             <h2
-              class="text-4xl lg:text-5xl font-display font-bold text-white leading-tight mb-6"
+              class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight"
             >
-              DeepSea lets you see the market through the eyes of whales.
+              DeepSea lets you <br />see the market through <br />the eyes of
+              whales.
             </h2>
           </div>
-          <div class="flex flex-col items-start lg:items-end">
-            <p class="text-white/80 text-lg mb-8 max-w-md lg:text-right">
-              We track and analyze real on-chain activity from 20,000 elite
-              wallets exposing how smart money accumulates, distributes, and
-              exits long before the crowd reacts.
-            </p>
+          <div class="text-right hidden lg:block">
             <button
-              class="bg-white text-primary hover:bg-gray-100 px-8 py-3 rounded-full font-bold flex items-center gap-2 transition-colors"
+              class="bg-white text-primary px-8 py-3 rounded-xl font-bold hover:bg-red-50 transition-colors inline-flex items-center gap-2"
             >
-              Launch App
-              <span class="material-icons text-sm">arrow_forward</span>
+              Start Exploring
+              <span class="material-icons-round text-sm">arrow_forward</span>
             </button>
+            <p class="text-red-200 mt-4 text-sm max-w-xs ml-auto">
+              We track and analyze real on-chain activity from 20,000 elite
+              wallets, exposing how smart money accumulates before the crowd.
+            </p>
           </div>
         </div>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div
-            class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/10 hover:bg-white/20 transition-colors"
-          >
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-white/20 pt-12"
+        >
+          <div class="text-center md:text-left">
             <div
-              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4"
+              class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0"
             >
-              <span class="material-icons text-white"
-                >account_balance_wallet</span
-              >
+              <span class="material-icons-round text-white">groups</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">
-              20,000 Most Elite Whale
-            </h3>
-            <p class="text-white/70 text-sm">
+            <h3 class="text-3xl font-bold text-white mb-2">20,000+</h3>
+            <p class="text-white font-medium mb-2">Elite Whale Wallets</p>
+            <p class="text-red-200 text-sm">
               We have meticulously filtered through millions of on-chain
-              addresses to identify top performers.
+              addresses to identify the top performing smart money entities.
             </p>
           </div>
-          <div
-            class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/10 hover:bg-white/20 transition-colors"
-          >
+          <div class="text-center md:text-left">
             <div
-              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4"
+              class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0"
             >
-              <span class="material-icons text-white">link</span>
+              <span class="material-icons-round text-white">hub</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">20 Top chains</h3>
-            <p class="text-white/70 text-sm">
-              DeepSea provides seamless, real-time data integration across 20 of
-              the industry's most active networks.
+            <h3 class="text-3xl font-bold text-white mb-2">30+</h3>
+            <p class="text-white font-medium mb-2">Top Chains</p>
+            <p class="text-red-200 text-sm">
+              DeepSea tracks cross-chain liquidity flow, capturing migration
+              across 30 of the industry's most active networks.
             </p>
           </div>
-          <div
-            class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/10 hover:bg-white/20 transition-colors"
-          >
+          <div class="text-center md:text-left">
             <div
-              class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4"
+              class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4 mx-auto md:mx-0"
             >
-              <span class="material-icons text-white">bolt</span>
+              <span class="material-icons-round text-white">bolt</span>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">1 Powerful Tool</h3>
-            <p class="text-white/70 text-sm">
-              An everything app. From advanced whale-tracking filters to instant
-              volatility alerts.
+            <h3 class="text-3xl font-bold text-white mb-2">1 Powerful Tool</h3>
+            <p class="text-white font-medium mb-2">All-in-one Alpha</p>
+            <p class="text-red-200 text-sm">
+              An everything app. From advanced whale tracking filters to instant
+              volatility alerts, we transform raw data into your strategic
+              trading edge.
             </p>
           </div>
+        </div>
+        <div class="lg:hidden mt-8 text-center">
+          <button
+            class="bg-white text-primary w-full px-8 py-3 rounded-xl font-bold hover:bg-red-50 transition-colors"
+          >
+            Start Exploring
+          </button>
         </div>
       </div>
     </section>
     <section
-      class="py-24 bg-background-light dark:bg-background-dark"
-      id="milestones"
+      class="py-24 bg-background-light dark:bg-background-dark relative overflow-hidden node-network"
     >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-display font-bold">
-            The <span class="text-primary">Milestones</span>
+      <div
+        class="absolute inset-0 pointer-events-none opacity-[0.06] dark:opacity-[0.08]"
+        style="
+          background-image: linear-gradient(
+              to right,
+              #c81e1e 1px,
+              transparent 1px
+            ),
+            linear-gradient(to bottom, #c81e1e 1px, transparent 1px),
+            radial-gradient(circle at center, #c81e1e 1px, transparent 1px);
+          background-size: 60px 60px, 60px 60px, 30px 30px;
+          background-position: 0 0, 0 0, 30px 30px;
+        "
+      ></div>
+      <div
+        class="absolute left-[10%] top-0 w-[1px] h-full bg-gradient-to-b from-transparent via-red-500/20 to-transparent"
+      ></div>
+      <div
+        class="absolute right-[15%] top-0 w-[1px] h-full bg-gradient-to-b from-transparent via-red-500/20 to-transparent delay-700"
+      ></div>
+      <div
+        class="absolute left-[35%] top-0 w-[1px] h-full bg-gradient-to-b from-transparent via-red-500/10 to-transparent delay-300"
+      ></div>
+      <div
+        class="absolute top-1/4 left-[20%] w-2 h-2 rounded-full bg-primary shadow-glow animate-pulse"
+      ></div>
+      <div
+        class="absolute bottom-1/3 right-[10%] w-3 h-3 rounded-full bg-primary shadow-glow animate-pulse delay-500"
+      ></div>
+      <div
+        class="absolute top-1/2 left-0 w-full h-[500px] bg-gradient-to-r from-red-600/5 via-transparent to-red-600/5 blur-3xl -z-10 transform -translate-y-1/2"
+      ></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-24">
+          <span
+            class="text-primary font-bold tracking-widest uppercase text-sm mb-3 block"
+            >Protocol Evolution</span
+          >
+          <h2
+            class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-6"
+          >
+            Strategic Roadmap
           </h2>
+          <div
+            class="w-32 h-1.5 bg-gradient-to-r from-primary via-red-500 to-orange-500 mx-auto rounded-full shadow-neon"
+          ></div>
+          <p
+            class="mt-6 text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed"
+          >
+            Charting the course for decentralized intelligence. From core
+            infrastructure to global ecosystem scaling.
+          </p>
         </div>
         <div class="relative">
           <div
-            class="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 z-0"
+            class="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gradient-to-b from-gray-200 via-primary to-gray-200 dark:from-slate-800 dark:via-red-900 dark:to-slate-800 rounded-full"
           ></div>
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-            <div
-              class="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-soft dark:shadow-none border border-border-light dark:border-border-dark flex flex-col relative group hover:border-primary dark:hover:border-primary transition-colors"
-            >
+          <div
+            class="relative z-10 mb-20 md:mb-32 flex flex-col md:flex-row items-center w-full group"
+          >
+            <div class="w-full md:w-1/2 md:pr-16 md:text-right pl-20 md:pl-0">
               <div
-                class="w-4 h-4 bg-primary rounded-full absolute -bottom-2 lg:-bottom-10 left-1/2 transform -translate-x-1/2 ring-4 ring-white dark:ring-surface-dark lg:group-hover:scale-125 transition-transform"
-              ></div>
-              <h4 class="font-bold text-lg mb-2">
-                Foundation &amp; Growth Q4 2025
-              </h4>
-              <ul
-                class="text-sm text-text-muted-light dark:text-text-muted-dark space-y-2 list-disc list-inside"
+                class="bg-white dark:bg-slate-900/80 backdrop-blur-sm p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-slate-700/60 hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-500 relative transform hover:-translate-y-1 group-hover:shadow-glow overflow-hidden"
               >
-                <li>Platform beta launch</li>
-                <li>Tracking 1,000 elite wallets</li>
-                <li>Airdrop &amp; early user onboarding</li>
-              </ul>
+                <div
+                  class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/5 to-transparent rounded-bl-full pointer-events-none"
+                ></div>
+                <h3
+                  class="text-sm font-bold text-primary mb-2 uppercase tracking-widest flex items-center justify-end gap-2"
+                >
+                  Phase 01 <span class="w-8 h-[1px] bg-primary/50"></span>
+                </h3>
+                <h4
+                  class="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                >
+                  Foundation &amp; Alpha
+                </h4>
+                <ul
+                  class="text-sm text-gray-600 dark:text-gray-400 space-y-3 md:items-end md:flex md:flex-col"
+                >
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right"
+                  >
+                    <span class="material-icons-round text-green-500 text-base"
+                      >check_circle</span
+                    >
+                    Initial Platform Architecture
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right"
+                  >
+                    <span class="material-icons-round text-green-500 text-base"
+                      >check_circle</span
+                    >
+                    Core On-Chain Data Feeds
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right"
+                  >
+                    <span class="material-icons-round text-green-500 text-base"
+                      >check_circle</span
+                    >
+                    Private Alpha Feedback Loop
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right"
+                  >
+                    <span class="material-icons-round text-green-500 text-base"
+                      >check_circle</span
+                    >
+                    Seed Community Growth
+                  </li>
+                </ul>
+              </div>
             </div>
             <div
-              class="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-soft dark:shadow-none border border-border-light dark:border-border-dark flex flex-col relative mt-8 lg:mt-24 group hover:border-primary dark:hover:border-primary transition-colors"
+              class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20 top-0 md:top-1/2 md:-translate-y-1/2"
             >
               <div
-                class="w-4 h-4 bg-primary rounded-full absolute -top-2 lg:-top-14 left-1/2 transform -translate-x-1/2 ring-4 ring-white dark:ring-surface-dark lg:group-hover:scale-125 transition-transform"
-              ></div>
-              <h4 class="font-bold text-lg mb-2">
-                Token Generation Event Q2 2026
-              </h4>
-              <ul
-                class="text-sm text-text-muted-light dark:text-text-muted-dark space-y-2 list-disc list-inside"
+                class="w-12 h-12 bg-white dark:bg-slate-900 rounded-full border-4 border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-lg group-hover:border-primary group-hover:scale-110 transition-all duration-300"
               >
-                <li>DEEP Token launch (TGE)</li>
-                <li>Airdrop distribution</li>
-                <li>Asset Intelligence core features</li>
-              </ul>
+                <span
+                  class="material-icons-round text-gray-400 dark:text-gray-500 group-hover:text-primary text-xl"
+                  >looks_one</span
+                >
+              </div>
+            </div>
+            <div class="w-full md:w-1/2"></div>
+          </div>
+          <div
+            class="relative z-10 mb-20 md:mb-32 flex flex-col md:flex-row items-center w-full group"
+          >
+            <div class="w-full md:w-1/2 hidden md:block"></div>
+            <div
+              class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20 top-0 md:top-1/2 md:-translate-y-1/2"
+            >
+              <div
+                class="w-14 h-14 bg-primary rounded-full border-4 border-white dark:border-slate-800 flex items-center justify-center shadow-neon animate-pulse"
+              >
+                <span class="material-icons-round text-white text-2xl"
+                  >rocket_launch</span
+                >
+              </div>
+            </div>
+            <div class="w-full md:w-1/2 md:pl-16 pl-20">
+              <div
+                class="bg-gradient-to-br from-white to-red-50 dark:from-slate-800 dark:to-slate-900 p-1 rounded-3xl shadow-2xl relative transform scale-[1.02]"
+              >
+                <div
+                  class="bg-white dark:bg-slate-900 rounded-[1.4rem] p-7 h-full relative overflow-hidden"
+                >
+                  <div
+                    class="absolute -right-10 -top-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"
+                  ></div>
+                  <div class="flex items-center justify-between mb-4">
+                    <h3
+                      class="text-sm font-bold text-primary uppercase tracking-widest flex items-center gap-2"
+                    >
+                      <span class="w-8 h-[1px] bg-primary/50"></span> Phase 02
+                    </h3>
+                    <span
+                      class="px-3 py-1 rounded-full text-xs font-bold bg-primary text-white shadow-glow uppercase tracking-wide animate-bounce"
+                    >
+                      Live Now
+                    </span>
+                  </div>
+                  <h4
+                    class="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                  >
+                    Public Beta &amp; AI Integration
+                  </h4>
+                  <ul
+                    class="text-sm text-gray-700 dark:text-gray-300 space-y-4"
+                  >
+                    <li class="flex items-start gap-3">
+                      <div class="mt-0.5 p-1 bg-primary/10 rounded-full">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                      </div>
+                      <span class="font-medium"
+                        >Public Beta Release &amp; Global Access</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <div class="mt-0.5 p-1 bg-primary/10 rounded-full">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                      </div>
+                      <span class="font-medium"
+                        >AI On-Chain Assistant Deployment</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <div class="mt-0.5 p-1 bg-primary/10 rounded-full">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                      </div>
+                      <span class="font-medium"
+                        >Multi-Chain Expansion (Solana, Base)</span
+                      >
+                    </li>
+                    <li class="flex items-start gap-3">
+                      <div class="mt-0.5 p-1 bg-primary/10 rounded-full">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                      </div>
+                      <span class="font-medium"
+                        >Strategic KOL Partnerships</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="relative z-10 mb-20 md:mb-32 flex flex-col md:flex-row items-center w-full group"
+          >
+            <div class="w-full md:w-1/2 md:pr-16 md:text-right pl-20 md:pl-0">
+              <div
+                class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-slate-700/60 hover:border-gray-300 dark:hover:border-slate-600 transition-all duration-500 relative transform hover:-translate-y-1 group-hover:shadow-lg"
+              >
+                <h3
+                  class="text-sm font-bold text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-widest flex items-center justify-end gap-2 group-hover:text-primary transition-colors"
+                >
+                  Phase 03
+                  <span
+                    class="w-8 h-[1px] bg-gray-200 dark:bg-slate-700 group-hover:bg-primary transition-colors"
+                  ></span>
+                </h3>
+                <h4
+                  class="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                >
+                  Token Generation Event
+                </h4>
+                <ul
+                  class="text-sm text-gray-600 dark:text-gray-400 space-y-3 md:items-end md:flex md:flex-col"
+                >
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >token</span
+                    >
+                    $DEEP Governance Token Launch
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >savings</span
+                    >
+                    Staking &amp; Rewards Program Live
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >how_to_vote</span
+                    >
+                    DAO Formation &amp; Community Voting
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >store</span
+                    >
+                    Tier 1 Exchange Listings
+                  </li>
+                </ul>
+              </div>
             </div>
             <div
-              class="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-soft dark:shadow-none border border-border-light dark:border-border-dark flex flex-col relative group hover:border-primary dark:hover:border-primary transition-colors"
+              class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20 top-0 md:top-1/2 md:-translate-y-1/2"
             >
               <div
-                class="w-4 h-4 bg-primary rounded-full absolute -bottom-2 lg:-bottom-10 left-1/2 transform -translate-x-1/2 ring-4 ring-white dark:ring-surface-dark lg:group-hover:scale-125 transition-transform"
-              ></div>
-              <h4 class="font-bold text-lg mb-2">
-                Expansion &amp; Intelligence Q3 2026
-              </h4>
-              <ul
-                class="text-sm text-text-muted-light dark:text-text-muted-dark space-y-2 list-disc list-inside"
+                class="w-12 h-12 bg-white dark:bg-slate-900 rounded-full border-4 border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-lg group-hover:border-primary group-hover:scale-110 transition-all duration-300"
               >
-                <li>Advanced whale behavior analysis</li>
-                <li>AI Assistant (early version)</li>
-                <li>Multi-chain expansion</li>
-              </ul>
+                <span
+                  class="material-icons-round text-gray-400 dark:text-gray-500 group-hover:text-primary text-xl"
+                  >looks_3</span
+                >
+              </div>
+            </div>
+            <div class="w-full md:w-1/2"></div>
+          </div>
+          <div
+            class="relative z-10 mb-20 md:mb-32 flex flex-col md:flex-row items-center w-full group"
+          >
+            <div class="w-full md:w-1/2 hidden md:block"></div>
+            <div
+              class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20 top-0 md:top-1/2 md:-translate-y-1/2"
+            >
+              <div
+                class="w-12 h-12 bg-white dark:bg-slate-900 rounded-full border-4 border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-lg group-hover:border-primary group-hover:scale-110 transition-all duration-300"
+              >
+                <span
+                  class="material-icons-round text-gray-400 dark:text-gray-500 group-hover:text-primary text-xl"
+                  >looks_4</span
+                >
+              </div>
+            </div>
+            <div class="w-full md:w-1/2 md:pl-16 pl-20">
+              <div
+                class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-slate-700/60 hover:border-gray-300 dark:hover:border-slate-600 transition-all duration-500 relative transform hover:-translate-y-1 group-hover:shadow-lg"
+              >
+                <h3
+                  class="text-sm font-bold text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2 group-hover:text-primary transition-colors"
+                >
+                  <span
+                    class="w-8 h-[1px] bg-gray-200 dark:bg-slate-700 group-hover:bg-primary transition-colors"
+                  ></span>
+                  Phase 04
+                </h3>
+                <h4
+                  class="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                >
+                  Enterprise &amp; Growth
+                </h4>
+                <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-3">
+                  <li
+                    class="flex items-center gap-3 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >business</span
+                    >
+                    Institutional Analytics Suite
+                  </li>
+                  <li
+                    class="flex items-center gap-3 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >api</span
+                    >
+                    Developer API Access
+                  </li>
+                  <li
+                    class="flex items-center gap-3 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >handshake</span
+                    >
+                    Strategic Ecosystem Partnerships
+                  </li>
+                  <li
+                    class="flex items-center gap-3 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >psychology</span
+                    >
+                    Advanced ML Prediction Models
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div
+            class="relative z-10 flex flex-col md:flex-row items-center w-full group"
+          >
+            <div class="w-full md:w-1/2 md:pr-16 md:text-right pl-20 md:pl-0">
+              <div
+                class="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-soft border border-gray-100 dark:border-slate-700/60 hover:border-gray-300 dark:hover:border-slate-600 transition-all duration-500 relative transform hover:-translate-y-1 group-hover:shadow-lg"
+              >
+                <div
+                  class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent group-hover:via-primary transition-all"
+                ></div>
+                <h3
+                  class="text-sm font-bold text-gray-400 dark:text-gray-500 mb-2 uppercase tracking-widest flex items-center justify-end gap-2 group-hover:text-primary transition-colors"
+                >
+                  Phase 05
+                  <span
+                    class="w-8 h-[1px] bg-gray-200 dark:bg-slate-700 group-hover:bg-primary transition-colors"
+                  ></span>
+                </h3>
+                <h4
+                  class="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                >
+                  Global Scale &amp; Decentralization
+                </h4>
+                <ul
+                  class="text-sm text-gray-600 dark:text-gray-400 space-y-3 md:items-end md:flex md:flex-col"
+                >
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >public</span
+                    >
+                    Full Protocol Decentralization
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >hub</span
+                    >
+                    Cross-Chain Interoperability Hub
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >rocket</span
+                    >
+                    Massive User Acquisition
+                  </li>
+                  <li
+                    class="flex items-center gap-3 md:flex-row-reverse text-right group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors"
+                  >
+                    <span
+                      class="material-icons-round text-gray-300 dark:text-slate-600 text-base group-hover:text-primary transition-colors"
+                      >eco</span
+                    >
+                    Long-Term Sustainability Fund
+                  </li>
+                </ul>
+              </div>
             </div>
             <div
-              class="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-soft dark:shadow-none border border-border-light dark:border-border-dark flex flex-col relative mt-8 lg:mt-24 group hover:border-primary dark:hover:border-primary transition-colors"
+              class="absolute left-8 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center z-20 top-0 md:top-1/2 md:-translate-y-1/2"
             >
               <div
-                class="w-4 h-4 bg-primary rounded-full absolute -top-2 lg:-top-14 left-1/2 transform -translate-x-1/2 ring-4 ring-white dark:ring-surface-dark lg:group-hover:scale-125 transition-transform"
-              ></div>
-              <h4 class="font-bold text-lg mb-2">
-                Scale &amp; Ecosystem Q4 2026
-              </h4>
-              <ul
-                class="text-sm text-text-muted-light dark:text-text-muted-dark space-y-2 list-disc list-inside"
+                class="w-12 h-12 bg-white dark:bg-slate-900 rounded-full border-4 border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-lg group-hover:border-primary group-hover:scale-110 transition-all duration-300"
               >
-                <li>Enterprise &amp; API access</li>
-                <li>KOL Verification full release</li>
-                <li>Data marketplace &amp; Intel trading</li>
-              </ul>
+                <span
+                  class="material-icons-round text-gray-400 dark:text-gray-500 group-hover:text-primary text-xl"
+                  >looks_5</span
+                >
+              </div>
             </div>
+            <div class="w-full md:w-1/2"></div>
           </div>
         </div>
       </div>
     </section>
-    <section class="py-20 bg-white dark:bg-surface-dark">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-12">
-          <h2 class="text-3xl lg:text-4xl font-display font-bold">
-            Frequently Asked <span class="text-primary">Questions</span>
-          </h2>
-          <div
-            class="hidden lg:block w-24 h-24 rounded-full border-2 border-dashed border-red-200 dark:border-red-900/40 relative"
-          >
-            <div
-              class="absolute inset-0 m-auto w-16 h-16 rounded-full border border-red-100 dark:border-red-900/20"
-            ></div>
-          </div>
-        </div>
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="bg-primary p-8 rounded-2xl text-white">
-            <h3 class="font-bold text-xl mb-4">What is DeepSea?</h3>
-            <p class="text-white/80 text-sm leading-relaxed">
-              DeepSea is an On-Chain Intelligence Platform That Tracks And
-              Analyzes Real Capital Flow From 20,000 Elite Whale Wallets,
-              Helping You See How Smart Money Moves Before Price Reacts.
-            </p>
-          </div>
-          <div
-            class="bg-background-light dark:bg-background-dark p-8 rounded-2xl border border-border-light dark:border-border-dark"
-          >
-            <h3 class="font-bold text-xl mb-4 text-primary">
-              How is DeepSea Different?
-            </h3>
-            <p
-              class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed"
-            >
-              Most tools show raw data. DeepSea turns On-Chain Activity into
-              clean, actionable intelligence, focused on whale behavior, timing,
-              and intent — not complex charts.
-            </p>
-          </div>
-          <div
-            class="bg-background-light dark:bg-background-dark p-8 rounded-2xl border border-border-light dark:border-border-dark"
-          >
-            <h3 class="font-bold text-xl mb-4 text-primary">
-              What Is The DEEP Airdrop?
-            </h3>
-            <p
-              class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed"
-            >
-              The DEEP Airdrop rewards early users who join the platform,
-              complete tasks, and invite others. Early participation unlocks
-              higher rewards before the public launch.
-            </p>
-          </div>
-          <div class="bg-primary p-8 rounded-2xl text-white">
-            <h3 class="font-bold text-xl mb-4">Who Is DeepSea For?</h3>
-            <p class="text-white/80 text-sm leading-relaxed">
-              DeepSea is built for investors who want to move early, trade with
-              data, and avoid being exit liquidity — from serious retail traders
-              to professionals.
-            </p>
-          </div>
-          <div
-            class="bg-primary p-8 rounded-2xl text-white md:col-span-2 lg:col-span-1"
-          >
-            <h3 class="font-bold text-xl mb-4">
-              Do I Need Trading Experience?
-            </h3>
-            <p class="text-white/80 text-sm leading-relaxed">
-              No. DeepSea is designed to be beginner-friendly. With an AI
-              Assistant that explains On-Chain data in simple language while
-              still offering depth for advanced users.
-            </p>
-          </div>
-          <div
-            class="bg-background-light dark:bg-background-dark p-8 rounded-2xl border border-border-light dark:border-border-dark md:col-span-2 lg:col-span-1"
-          >
-            <h3 class="font-bold text-xl mb-4 text-primary">
-              Real Data Or Predictions?
-            </h3>
-            <p
-              class="text-text-muted-light dark:text-text-muted-dark text-sm leading-relaxed"
-            >
-              DeepSea uses real, verifiable On-Chain data from 20,000 elite
-              wallets. We don't predict price — we show how smart money is
-              actually moving.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section
-      class="py-24 bg-background-light dark:bg-background-dark"
-      id="contact"
-    >
-      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <section class="py-20 bg-gray-50 dark:bg-slate-900/50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2
-          class="text-3xl lg:text-4xl font-display font-bold text-center mb-12"
+          class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-16"
         >
-          Let's Get in <span class="text-primary">Touch</span>
+          Frequently Asked Questions
         </h2>
-        <div
-          class="bg-white dark:bg-surface-dark p-8 md:p-12 rounded-3xl shadow-soft dark:shadow-none border border-border-light dark:border-border-dark"
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            class="bg-primary p-6 rounded-2xl shadow-lg transform hover:-translate-y-1 transition-transform"
+          >
+            <h3 class="font-bold text-lg text-white mb-3">What is DeepSea?</h3>
+            <p class="text-red-100 text-sm leading-relaxed">
+              DeepSea is an On-Chain Intelligence Platform that Tracks and
+              Analyzes Real Capital Flow from 20,000+ Elite Whale Wallets,
+              helping You See How Smart Money Moves Before Prices React.
+            </p>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <h3 class="font-bold text-lg text-primary mb-3">
+              How is DeepSea Different From Other Tools?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              Other tools show raw data. DeepSea turns data into signals. We
+              filter out noise, bots, and wash trading to show you only
+              high-signal wallet movements.
+            </p>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <h3 class="font-bold text-lg text-primary mb-3">
+              What is The DEEP Airdrop?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              The DEEP Airdrop Rewards Early Adopters. Join the Waitlist,
+              Connect your Wallet, and Refer Friends to earn points towards the
+              TGE allocation.
+            </p>
+          </div>
+          <div
+            class="bg-primary p-6 rounded-2xl shadow-lg transform hover:-translate-y-1 transition-transform"
+          >
+            <h3 class="font-bold text-lg text-white mb-3">
+              Who is DeepSea For?
+            </h3>
+            <p class="text-red-100 text-sm leading-relaxed">
+              DeepSea is built for Investors Who Want To Move Early. Traders
+              seeking Smart Money Accumulation liquidity - From Serious Retail
+              Traders To Professionals.
+            </p>
+          </div>
+          <div
+            class="bg-primary p-6 rounded-2xl shadow-lg transform hover:-translate-y-1 transition-transform"
+          >
+            <h3 class="font-bold text-lg text-white mb-3">
+              Do I Need Trading Experience To Use DeepSea?
+            </h3>
+            <p class="text-red-100 text-sm leading-relaxed">
+              No. DeepSea is designed To Be Beginner-Friendly. With AI
+              Assistant, We Explain On-Chain Data In Simple Language while still
+              offering depth for pros.
+            </p>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <h3 class="font-bold text-lg text-primary mb-3">
+              Is DeepSea Showing Real Data Or Predictions?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+              Real Data. We Don't Predict Prices - We Show Live Smart Money
+              Activity allowing for faster More Informed Decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 relative overflow-hidden">
+      <div
+        class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-red-50 to-transparent dark:from-red-900/10 pointer-events-none"
+      ></div>
+      <div
+        class="blur-blob bg-orange-200 dark:bg-orange-900/30 w-96 h-96 rounded-full bottom-0 right-0 translate-y-1/2"
+      ></div>
+      <div
+        class="blur-blob bg-primary/20 w-96 h-96 rounded-full bottom-0 left-0 translate-y-1/2 -translate-x-1/4"
+      ></div>
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <h2
+          class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12"
         >
-          <form class="space-y-6">
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark mb-2"
-                  for="email"
-                  >Email</label
-                >
-                <input
-                  class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background-dark border border-gray-200 dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-text-light dark:text-text-dark"
-                  id="email"
-                  placeholder="example@email.com"
-                  type="email"
-                />
-              </div>
-              <div>
-                <label
-                  class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark mb-2"
-                  for="name"
-                  >Name</label
-                >
-                <input
-                  class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background-dark border border-gray-200 dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-text-light dark:text-text-dark"
-                  id="name"
-                  placeholder="Full name"
-                  type="text"
-                />
-              </div>
+          Let's Get in Touch
+        </h2>
+        <form
+          class="bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg p-8 md:p-12 rounded-3xl shadow-soft border border-white dark:border-slate-700"
+        >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                for="email"
+                >Email</label
+              >
+              <input
+                class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 focus:border-primary focus:ring-primary dark:text-white transition-colors"
+                id="email"
+                placeholder="example@deepsea.com"
+                type="email"
+              />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-text-muted-light dark:text-text-muted-dark mb-2"
-                for="message"
-                >Message</label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                for="name"
+                >Name</label
               >
-              <textarea
-                class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-background-dark border border-gray-200 dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder-gray-400 dark:placeholder-gray-600 text-text-light dark:text-text-dark resize-none"
-                id="message"
-                placeholder="Write your message..."
-                rows="4"
-              ></textarea>
+              <input
+                class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 focus:border-primary focus:ring-primary dark:text-white transition-colors"
+                id="name"
+                placeholder="Full Name"
+                type="text"
+              />
             </div>
-            <button
-              class="w-full bg-primary hover:bg-primary-hover text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all flex items-center justify-center gap-2"
-              type="button"
+          </div>
+          <div class="mb-8">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              for="message"
+              >Message</label
             >
-              Get in Touch
-              <span class="material-icons text-sm">play_arrow</span>
-            </button>
-          </form>
-        </div>
+            <textarea
+              class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 focus:border-primary focus:ring-primary dark:text-white transition-colors"
+              id="message"
+              placeholder="Write your message..."
+              rows="4"
+            ></textarea>
+          </div>
+          <button
+            class="w-full bg-primary hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-red-500/30 transition-all hover:-translate-y-1"
+            type="submit"
+          >
+            Get in Touch
+          </button>
+        </form>
       </div>
     </section>
     <footer
-      class="py-12 bg-gray-50 dark:bg-[#0A0C0F] border-t border-border-light dark:border-border-dark"
+      class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-gray-100 dark:border-slate-800"
     >
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div
-          class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-8"
+          class="flex flex-col md:flex-row justify-between items-center gap-6"
         >
           <div class="flex items-center gap-2">
-            <img
-              alt="Deep Sea Logo"
-              class="h-8 w-auto grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfNNts71u4uJUxahdlkk71bZHdAfONEjMAjK7ECt_II4g5b9YB3mhSr5E33RaYHSrASZ1XtuBl62eWs_h6ff2OvAjvs1U9UemO7RvDUTgUBKnkzUl3HoCjTSTx5NiJxFbDE6GGGwS6JXjh8_JkPzmn0qfZfm5b83E-QPsoupUIjHBXXm6QoklKcoD6UzMcMIvtl1hliS00dmMBwcZV7LNWXlOx_BzOakApnkp8JKJ_AaEPtIqRrgGH18Caj0nT6S_ZIvhDExcpJWc"
-            />
-          </div>
-          <div class="flex flex-wrap gap-8">
-            <a
-              class="text-sm text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors"
-              href="#"
-              >Home</a
+            <span class="material-icons-round text-primary text-2xl"
+              >tsunami</span
             >
-            <a
-              class="text-sm text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors"
-              href="#"
-              >About</a
-            >
-            <a
-              class="text-sm text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors"
-              href="#"
-              >How It Works</a
-            >
-            <a
-              class="text-sm text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors"
-              href="#"
-              >Services</a
+            <span class="font-bold text-lg text-gray-900 dark:text-white"
+              >Deep Sea</span
             >
           </div>
-        </div>
-        <div
-          class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
-        >
-          <div
-            class="max-w-md text-xs text-text-muted-light dark:text-text-muted-dark leading-relaxed"
-          >
-            <p class="mb-2">
-              Get in touch with the DeepSea team or follow us on social media to
-              stay updated on product releases, airdrops, and on-chain insights.
-            </p>
-            <div class="flex items-center gap-1 text-red-400">
-              <span class="material-icons text-[10px]">favorite</span>
-              <span>Made with love for the blockchain</span>
-            </div>
+          <div class="flex flex-wrap justify-center gap-8">
+            <a
+              class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
+              href="#"
+              >Terms</a
+            >
+            <a
+              class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
+              href="#"
+              >Privacy</a
+            >
+            <a
+              class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
+              href="#"
+              >Docs</a
+            >
+            <a
+              class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
+              href="#"
+              >Twitter</a
+            >
+            <a
+              class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
+              href="#"
+              >Discord</a
+            >
           </div>
           <div class="flex gap-4">
-            <a
-              class="w-8 h-8 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-text-muted-light dark:text-text-muted-dark hover:text-primary hover:shadow-md transition-all"
-              href="#"
-            >
-              <span class="material-icons text-sm">public</span>
-            </a>
-            <a
-              class="w-8 h-8 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-text-muted-light dark:text-text-muted-dark hover:text-primary hover:shadow-md transition-all"
-              href="#"
-            >
-              <span class="material-icons text-sm">send</span>
-            </a>
-            <a
-              class="w-8 h-8 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-text-muted-light dark:text-text-muted-dark hover:text-primary hover:shadow-md transition-all"
-              href="#"
-            >
-              <span class="material-icons text-sm">smart_display</span>
-            </a>
-            <a
-              class="w-8 h-8 rounded-full bg-white dark:bg-surface-dark flex items-center justify-center text-text-muted-light dark:text-text-muted-dark hover:text-primary hover:shadow-md transition-all"
-              href="#"
-            >
-              <span class="material-icons text-sm">alternate_email</span>
-            </a>
+            <div class="w-2 h-2 rounded-full bg-red-300"></div>
+            <div class="w-2 h-2 rounded-full bg-orange-300"></div>
+            <div class="w-2 h-2 rounded-full bg-yellow-300"></div>
           </div>
+        </div>
+        <div class="mt-8 text-center text-xs text-gray-400 dark:text-gray-500">
+          © 2024 DeepSea Intelligence. All rights reserved.
         </div>
       </div>
     </footer>
