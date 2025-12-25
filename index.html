@@ -54,6 +54,9 @@
       };
     </script>
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
       body {
         font-family: "Plus Jakarta Sans", sans-serif;
       }
@@ -95,34 +98,37 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
           <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
-            <span class="material-icons-round text-primary text-3xl"
-              >tsunami</span
-            >
-            <span
-              class="font-bold text-xl tracking-tight text-gray-900 dark:text-white"
-              >Deep Sea</span
-            >
+            <img
+              class="h-8 w-[175px] object-contain"
+              src="/images/logo.png"
+              alt="DeepSea Logo"
+            />
           </div>
           <div class="hidden md:flex items-center space-x-8">
             <a
               class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
-              href="#"
+              href="#features"
               >Features</a
             >
             <a
               class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
-              href="#"
+              href="#roadmap"
               >Roadmap</a
             >
             <a
               class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
-              href="#"
-              >About Us</a
+              href="#faq"
+              >FAQ</a
             >
             <a
               class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
-              href="#"
-              >Login</a
+              href="#airdrop"
+              >Airdrop</a
+            >
+            <a
+              class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
+              href="#contact"
+              >Contact</a
             >
           </div>
           <div class="hidden md:flex items-center space-x-4">
@@ -195,8 +201,8 @@
             <div class="relative w-full max-w-lg aspect-square">
               <img
                 alt="Abstract 3D Red Form"
+                src="/images/hero.jpeg"
                 class="object-cover w-full h-full rounded-[3rem] shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-700"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2OJwMAlkAZWnetWFtaaOpCo3XvMUAfX6y1u-X_Py4QONM5eXWi-qnt5915-qoffQoPCjQRp2t0abRPPzUqvIlhsW8bIbQwBJGKcwjuH97aCE4wM03mRnlZ9_UeVdn5CQU9cj3Gxyn2hkSeQ2J4dSR_hqGWqvBnQLJEEdZeMctyYucpjjHwUqSWc02FMBBvMmErkLGj2bqTpP9yoqaq36aZnzbUnd2W7cKLpOF7iQHOlgcHrd4KJC07BZVX90AjUgoz0Hx4RNmsD6i"
               />
               <div
                 class="absolute -bottom-6 -left-6 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 flex items-center gap-3 animate-bounce"
@@ -218,6 +224,7 @@
       </div>
     </section>
     <section
+      id="airdrop"
       class="py-24 relative overflow-hidden bg-white dark:bg-slate-900 border-y border-gray-100 dark:border-slate-800"
     >
       <div
@@ -455,7 +462,7 @@
         </div>
       </div>
     </section>
-    <section class="py-20 bg-white dark:bg-slate-900 relative">
+    <section id="features" class="py-20 bg-white dark:bg-slate-900 relative">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2
@@ -626,6 +633,7 @@
       </div>
     </section>
     <section
+      id="roadmap"
       class="py-24 bg-background-light dark:bg-background-dark relative overflow-hidden node-network"
     >
       <div
@@ -1072,7 +1080,7 @@
       </div>
     </section>
 
-    <section class="py-20 bg-gray-50 dark:bg-slate-900/50">
+    <section id="faq" class="py-20 bg-gray-50 dark:bg-slate-900/50">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2
           class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-16"
@@ -1152,7 +1160,7 @@
         </div>
       </div>
     </section>
-    <section class="py-24 relative overflow-hidden">
+    <section id="contact" class="py-24 relative overflow-hidden">
       <div
         class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-red-50 to-transparent dark:from-red-900/10 pointer-events-none"
       ></div>
